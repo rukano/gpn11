@@ -68,7 +68,6 @@ end
 -- UPDATE
 
 function love.update(dt)
-   world:update(dt)
    if love.keyboard.isDown("left") then
       player.push(dt, -1)
       -- drehen links
