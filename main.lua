@@ -1,5 +1,6 @@
 require "LICK"
 require "LICK/lib"
+require "AnAL"
 ez = require "LICK.lib.hlpr"
 Timer = require "LICK.lib.hump.timer"
 Gamestate = require "LICK.lib.hump.gamestate"
