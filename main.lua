@@ -7,7 +7,7 @@ Gamestate = require "LICK.lib.hump.gamestate"
 Vector = require "LICK.lib.hump.vector"
 Class = require "LICK.lib.hump.class"
 Camera = require "LICK.lib.hump.camera"
-HC = require "HadronCollider"
+HC = require "HardonCollider"
 
 
 
