@@ -1,3 +1,6 @@
+#+STARTUP: indent
+#+STARTUP: content
+
 * MAGNETISMUS
 ** Project Codename: MagNet
 ** Concept:
@@ -16,3 +19,22 @@
 - Bosses
 
 
+
+* Ideen von Juan
+** Mouse LClick = attract
+** Mouse RClick = repel
+** Spacebar = drop bomb/obj/bullet
+** Bosses = can invert polarity
+** Powerup = increase magnetism (besser controlling)
+** Dialoges with bosses
+- HA HA HA
+- So you came to break my balls?
+- I am ... 
+** Bosses
+- U should break their balls
+- Balls => polarity normal
+*** Schlagzeuger von Monster MAgnet
+*** Singer von Magneto
+*** Magneto from the X Men
+** Levels = 3 ?
+** End scene = Welt weider in ordnung, alle glücklich!
