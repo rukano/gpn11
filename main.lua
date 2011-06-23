@@ -7,8 +7,11 @@ Vector = require "LICK.lib.hump.vector"
 Class = require "LICK.lib.hump.class"
 Camera = require "LICK.lib.hump.camera"
 
+
+
 --lick.clearFlag = true
 lick.reset = true
+lick.directory = "."
 
 --------------------------------------------------------------------------------
 -- INIT
