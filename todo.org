@@ -1,4 +1,18 @@
 * MAGNETISMUS
 ** Project Codename: MagNet
 ** Concept:
+- VVVVVV Clone
+- Magnetische felder im stage
+- Puzzle + Endboss
+- Endboss = Magnetische charactere:
+  - Magneto (xmen)
+  - Magneto (band)
+  - Monster Magnet
+** Graphics
+- Tiles
+- Magnetic Tiles
+- Weapons / Powerups
+- Person
+- Bosses
+
 
