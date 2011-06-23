@@ -1,6 +1,6 @@
 require "LICK"
 require "LICK/lib"
-require "AnAL"
+AnAL = require "AnAL/AnAL"
 ez = require "LICK.lib.hlpr"
 Timer = require "LICK.lib.hump.timer"
 Gamestate = require "LICK.lib.hump.gamestate"
@@ -26,6 +26,11 @@ function love.load()
    love.graphics.setBlendMode("alpha")
    love.graphics.setMode(width, height, false, true, 0)
 
+   player = {}
+   player.image = love.graphics.newImage("img/player.png")
+   player.x = 50
+   player.y = 50
+
    -- physics world
    world = world or love.physics.newWorld(-width, -height, width, height)
    world:setMeter(64)
@@ -40,6 +45,7 @@ function love.load()
 
    -- objects: bodies and shapes
    o = o or {}
+
    o.bodies = o.bodies or {}
    o.shapes = o.shapes or {}
 end
@@ -49,13 +55,23 @@ end
 
 function love.update(dt)
    world:update(dt)
+   if love.keyboard.isDown("left") then
+
+   elseif love.keyboard.isDown("right") then
+
+   elseif love.keyboard.isDown("up") then
+
+   elseif love.keyboard.isDown("down") then
+
+   end
 end
 
 --------------------------------------------------------------------------------
 -- DRAW
 function love.draw()
-
+   love.graphics.draw(player.image, player.x, player.y)
 end
+
 
 --------------------------------------------------------------------------------
 -- FUNCTIONS
