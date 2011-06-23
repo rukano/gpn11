@@ -7,6 +7,7 @@ Gamestate = require "LICK.lib.hump.gamestate"
 Vector = require "LICK.lib.hump.vector"
 Class = require "LICK.lib.hump.class"
 Camera = require "LICK.lib.hump.camera"
+HC = require "HadronCollider"
 
 
 
@@ -28,7 +29,7 @@ function love.load()
 
    player = {}
    player.image = love.graphics.newImage("img/player.png")
-   player.pos = Vector.new(50, 50)
+   player.pos = Vector.new(width/2, height/2)
    player.dpos = Vector.new(0, 0)
    player.rotation = 0
    player.drot = 0
@@ -49,12 +50,6 @@ function love.load()
                     player.drot = player.drot + (dt * 0.1 * direction)
                  end
    
-
-   -- physics world
-   world = world or love.physics.newWorld(-width, -height, width, height)
-   world:setMeter(64)
-   world:setCallbacks(bang)
-   world:setGravity(0, 2000)
 
    -- global tables
    bodies = bodies or {}
