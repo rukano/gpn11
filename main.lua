@@ -32,12 +32,21 @@ function love.load()
    player.dpos = Vector.new(0, 0)
    player.rotation = 0
    player.drot = 0
+   player.rot = 0
+
    player.update = function(dt)
-                      player.drot = player.drot - (1 * dt)
-                      player.dpos = player.dpos - (1 * dt)
+                      --player.drot = player.drot - (player.drot * 0.9 * dt)
+                      player.dpos.x = player.dpos.x  + (math.random(-5, 5) * dt)
+                      player.dpos.y = player.dpos.y  + (math.random(-5, 5) * dt)
+
+                      player.rot = player.rot + player.drot
+                      player.pos = player.pos + player.dpos
+--                      print(player.dpos.x)
+
                    end
    player.push = function(dt, direction)
-                    player.drot = math.max(player.drot + (dt * 1 * direction), 0.1)
+                    --print("pushing")
+                    player.drot = player.drot + (dt * 0.1 * direction)
                  end
    
 
@@ -85,7 +94,7 @@ end
 --------------------------------------------------------------------------------
 -- DRAW
 function love.draw()
-   love.graphics.draw(player.image, player.pos:unpack(), player.rot)
+   love.graphics.draw(player.image, player.pos.x, player.pos.y, player.rot, 1, 1, player.image:getHeight()/2, player.image:getWidth()/2)
 end
 
 
