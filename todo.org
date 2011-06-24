@@ -1,6 +1,25 @@
 #+STARTUP: indent
 #+STARTUP: content
 
+* GAMEPLAY
+** Collision detection is ok, now make it work the way it sould
+** Fix the crashing bug on counting tables
+** Timer for the bombs, explode in radius
+** make life bar
+** trigger bosses after some time
+** incorporate sound and effects
+** Make highscore table/system
+
+* Graohics
+** Make enemies
+** make bombs
+** make power ups
+** retouch the stuff
+
+* Music
+** Menu track
+** Highscore track
+
 * MAGNETISMUS
 ** Project Codename: MagNet
 ** Concept:
