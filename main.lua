@@ -58,6 +58,7 @@ function love.load()
    magnet.pos = Vector.new(love.mouse.getPosition())
    magnet.rot = 0
    magnet.force = 1
+   magnet.color = {255,255,255,255}
 end
 
 --------------------------------------------------------------------------------
@@ -66,6 +67,14 @@ end
 function love.update(dt)
    magnet.pos.x, magnet.pos.y = love.mouse.getPosition()
    magnet.rot = (1 - math.atan2( ( player.pos - magnet.pos ):unpack() ) ) % (2 * math.pi)
+
+   if love.mouse.isDown("l") then
+      magnet.color = {0,0,255,255}
+   elseif love.mouse.isDown("r") then
+      magnet.color = {255,0,0,255}
+   else
+      magnet.color = {255,255,255,255}
+   end
 
    if love.keyboard.isDown("left") then
       player.push(dt, -1)
@@ -87,12 +96,12 @@ end
 --------------------------------------------------------------------------------
 -- DRAW
 function love.draw()
-   love.graphics.draw(player.image, player.pos.x, player.pos.y, 
-                      player.rot, 1, 1, player.image:getWidth()/2, 
-                      player.image:getHeight()/2)
-   love.graphics.draw(magnet.image, 
-                      magnet.pos.x, magnet.pos.y, magnet.rot, 1, 1, 
-                      magnet.image:getWidth(), magnet.image:getHeight()/2)
+
+   love.graphics.setColor(255,255,255,255)
+   love.graphics.draw(player.image, player.pos.x, player.pos.y, player.rot, 1, 1, player.image:getWidth()/2, player.image:getHeight()/2)
+   love.graphics.setColor(unpack(magnet.color))
+   love.graphics.draw(magnet.image, magnet.pos.x, magnet.pos.y, magnet.rot, 1, 1, magnet.image:getWidth(), magnet.image:getHeight()/2)
+
 end
 
 
