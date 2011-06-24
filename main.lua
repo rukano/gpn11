@@ -27,6 +27,7 @@ function love.load()
    love.graphics.setBlendMode("alpha")
    love.graphics.setMode(width, height, false, true, 0)
 
+   -- player
    player = {}
    player.image = love.graphics.newImage("img/player.png")
    player.pos = Vector.new(width/2, height/2)
@@ -49,25 +50,22 @@ function love.load()
                     --print("pushing")
                     player.drot = player.drot + (dt * 0.1 * direction)
                  end
-   
 
-   -- global tables
-   bodies = bodies or {}
-   shapes = shapes or {}
-   limits = limits or {}
-   gravity = gravity or {}
-
-   -- objects: bodies and shapes
-   o = o or {}
-
-   o.bodies = o.bodies or {}
-   o.shapes = o.shapes or {}
+   -- magnet pointer
+   magnet = {}
+   magnet.image = love.graphics.newImage("img/magnet.png")
+   magnet.pos = Vector.new(love.mouse.getPosition())
+   magnet.rot = 0
+   magnet.force = 1
 end
 
 --------------------------------------------------------------------------------
 -- UPDATE
 
 function love.update(dt)
+   magnet.pos.x, magnet.pos.y = love.mouse.getPosition()
+
+
    if love.keyboard.isDown("left") then
       player.push(dt, -1)
       -- drehen links
@@ -88,7 +86,8 @@ end
 --------------------------------------------------------------------------------
 -- DRAW
 function love.draw()
-   love.graphics.draw(player.image, player.pos.x, player.pos.y, player.rot, 1, 1, player.image:getHeight()/2, player.image:getWidth()/2)
+   love.graphics.draw(player.image, player.pos.x, player.pos.y, player.rot, 1, 1, player.image:getWidth()/2, player.image:getHeight()/2)
+   love.graphics.draw(magnet.image, magnet.pos.x, magnet.pos.y, magnet.rot, 1, 1, magnet.image:getWidth(), magnet.image:getHeight()/2)
 end
 
 
@@ -96,7 +95,3 @@ end
 -- FUNCTIONS
 --------------------------------------------------------------------------------
 
--- collision detection
-function bang (a, b, coll)
-
-end
