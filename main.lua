@@ -66,23 +66,18 @@ end
 --------------------------------------------------------------------------------
 -- UPDATE
 
+
 function love.update(dt)
    magnet.pos.x, magnet.pos.y = love.mouse.getPosition()
---   magnet.rot = (1 - math.atan2( ( player.pos - magnet.pos ):unpack() ) ) % (2 * math.pi)
---   magnet.rot = math.acos((magnet.pos - screen_center).y / magnet.pos:dist(screen_center))
-
---   A = magnet.pos:normalized()
---   B = screen_center:normalized()
-
---   magnet.rot = math.acos( -(A.y - B.y) / A:dist(B))
-
    magnet.rot = getAngle(player.pos, magnet.pos)
 
 
    if love.mouse.isDown("l") then
       magnet.color = {0,0,255,255}
+      player.push(dt, -1)
    elseif love.mouse.isDown("r") then
       magnet.color = {255,0,0,255}
+      player.push(dt, 1)      
    else
       magnet.color = {255,255,255,255}
    end
@@ -104,6 +99,7 @@ function love.update(dt)
    player.update(dt)
 end
 
+
 --------------------------------------------------------------------------------
 -- DRAW
 function love.draw()
@@ -112,15 +108,6 @@ function love.draw()
    love.graphics.draw(player.image, player.pos.x, player.pos.y, player.rot, 1, 1, player.image:getWidth()/2, player.image:getHeight()/2)
    love.graphics.setColor(unpack(magnet.color))
    love.graphics.draw(magnet.image, magnet.pos.x, magnet.pos.y, magnet.rot + (math.pi/2), 1, 1, magnet.image:getWidth(), magnet.image:getHeight()/2)
-
-
--- test...   basic trigonometry... :-(
-   -- love.graphics.setColor(0, 0, 0, 255)
-   -- love.graphics.print(getAngle(screen_center, magnet.pos) / (2 * math.pi), 10, 10, 0, 2, 2)
-   -- love.graphics.line(screen_center.x, screen_center.y, magnet.pos.x, magnet.pos.y)
-   -- love.graphics.line(screen_center.x, screen_center.y, magnet.pos.x, screen_center.y)
-   -- love.graphics.line(magnet.pos.x, screen_center.y, magnet.pos.x, magnet.pos.y)
-   
 end
 
 
@@ -132,10 +119,7 @@ end
 function getAngle (a,b)
    local c = Vector.new(math.abs(a.x - b.x), 
                         math.abs(a.y - b.y))
-      
-   local rad = (math.atan2(
-              c:normalized():unpack()))
-
+   local rad = (math.atan2(c:unpack()))
 
    if (b.x - a.x) < 0 then
       rad = math.tau - rad 
