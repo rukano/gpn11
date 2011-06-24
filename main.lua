@@ -23,36 +23,55 @@ function love.load()
    height = love.graphics.getHeight()
    screen_center = Vector.new(width/2, height/2)
    
+   math.tau = math.pi * 2
+
    -- initial graphics setup
    love.graphics.setBackgroundColor(100, 100, 100)
    love.graphics.setBlendMode("alpha")
    love.graphics.setMode(width, height, false, true, 0)
 
+   love.mouse.setVisible(false)
 
-   math.tau = math.pi * 2
+   -- physics
+   world = world or love.physics.newWorld(0, 0, width, height)
+   world:setMeter(64)
+   world:setCallbacks(bang)
+   world:setGravity(0, 0)
+
+   limits = limits or {}
+   limits.bodies = limits.bodies or {}
+   limits.shapes = limits.shapes or {}
+
+   o = o or {}
+   o.bodies = o.bodies or {}
+   o.shapes = o.shapes or {}
+
+   minWidth = 10
+
+   limiters = {}
+   limiters.up = {x=0, y=0, w=width, h=20}
+   limiters.right = {x=width - 20, y=0, w=20, h=height}
+   limiters.down = {x=0, y=height - 20, w=width, h=20}
+   limiters.left = {x=0, y=0, w=20, h=height}
+
+   for k,v in pairs(limiters) do
+      local r = 20
+      limits.bodies[v] = limits.bodies[v] 
+         or love.physics.newBody(world, v.x, v.y, 0, 0)
+      limits.shapes[v] = limits.shapes[v]
+         or love.physics.newRectangleShape(limits.bodies[v], 
+                                           v.w/2, v.h/2, v.w, v.h,  0)
+   end
+
+
+
    -- player
-   player = {}
-   player.image = love.graphics.newImage("img/player.png")
-   player.pos = Vector.new(width/2, height/2)
-   player.dpos = Vector.new(0, 0)
-   player.rotation = 0
-   player.drot = 0
-   player.rot = 0
+   player = player or {}
+   player.image = player.image or  love.graphics.newImage("img/player.png")
+   player.body = player.body or love.physics.newBody(world, width/2, height/2, 15, 0)
+   player.shape = player.shape or love.physics.newCircleShape(player.body, 0, 0, 20)
 
-   player.update = function(dt)
-                      --player.drot = player.drot - (player.drot * 0.9 * dt)
-                      player.dpos.x = player.dpos.x  + (math.random(-5, 5) * dt)
-                      player.dpos.y = player.dpos.y  + (math.random(-5, 5) * dt)
-
-                      player.rot = player.rot + player.drot
-                      player.pos = player.pos + player.dpos
---                      print(player.dpos.x)
-
-                   end
-   player.push = function(dt, direction)
-                    --print("pushing")
-                    player.drot = player.drot + (dt * 0.1 * direction)
-                 end
+   player.pos = player.pos or Vector.new(width/2, height/2)
 
    player.attract = function(dt, point)
 --                    print("moving")
@@ -71,62 +90,49 @@ function love.load()
    magnet.image = love.graphics.newImage("img/magnet.png")
    magnet.pos = Vector.new(love.mouse.getPosition())
    magnet.rot = 0
-   magnet.force = 1
    magnet.color = {255,255,255,255}
 end
 
 --------------------------------------------------------------------------------
 -- UPDATE
 
-function love.update(dt)
-   magnet.pos.x, magnet.pos.y = love.mouse.getPosition()
-   magnet.rot = getAngle(player.pos, magnet.pos)
 
+function love.update(dt)
+   world:update(dt)
+   magnet.pos.x, magnet.pos.y = love.mouse.getPosition()
+
+   magnet.rot = getAngle(Vector.new(player.body:getPosition()), magnet.pos)
+
+   local line = (magnet.pos 
+                  - Vector.new(player.body:getPosition()))
+   local force = line * (1/line:len()) * 5
    if love.mouse.isDown("l") then
-      magnet.color = {0,0,255,255}
-      player.moveTo(dt, magnet.pos)
+      magnet.color = {0, 255, 0,255}
+      player.body:applyForce((force * -1):unpack())
+
    elseif love.mouse.isDown("r") then
       magnet.color = {255,0,0,255}
+      player.body:applyForce((force):unpack())
    else
       magnet.color = {255,255,255,255}
    end
-
-   if love.keyboard.isDown("left") then
-      player.push(dt, -1)
-      -- drehen links
-   elseif love.keyboard.isDown("right") then
-      -- drehen rechts
-      player.push(dt, 1)
-   elseif love.keyboard.isDown("up") then
-      -- entmagnetisieren
-      player.magnetic = false
-   elseif love.keyboard.isDown("down") then
-      -- magnetisieren
-      player.magnetic = true
-   end
-
-   player.update(dt)
 end
+
 
 --------------------------------------------------------------------------------
 -- DRAW
 function love.draw()
+   for i,v in pairs(limits.shapes) do
+      love.graphics.setColor(0, 0, 0)
+      love.graphics.polygon("fill", v:getPoints())
+   end
 
    love.graphics.setColor(255,255,255,255)
-   love.graphics.draw(player.image, player.pos.x, player.pos.y, player.rot, 1, 1, player.image:getWidth()/2, player.image:getHeight()/2)
+   love.graphics.draw(player.image, player.body:getX(), player.body:getY(), 0, 1, 1, player.image:getWidth()/2, player.image:getHeight()/2)
+
    love.graphics.setColor(unpack(magnet.color))
    love.graphics.draw(magnet.image, magnet.pos.x, magnet.pos.y, magnet.rot + (math.pi/2), 1, 1, magnet.image:getWidth(), magnet.image:getHeight()/2)
-
-
--- test...   basic trigonometry... :-(
-   -- love.graphics.setColor(0, 0, 0, 255)
-   -- love.graphics.print(getAngle(screen_center, magnet.pos) / (2 * math.pi), 10, 10, 0, 2, 2)
-   -- love.graphics.line(screen_center.x, screen_center.y, magnet.pos.x, magnet.pos.y)
-   -- love.graphics.line(screen_center.x, screen_center.y, magnet.pos.x, screen_center.y)
-   -- love.graphics.line(magnet.pos.x, screen_center.y, magnet.pos.x, magnet.pos.y)
-   
 end
-
 
 --------------------------------------------------------------------------------
 -- FUNCTIONS
@@ -136,10 +142,7 @@ end
 function getAngle (a,b)
    local c = Vector.new(math.abs(a.x - b.x), 
                         math.abs(a.y - b.y))
-      
-   local rad = (math.atan2(
-              c:normalized():unpack()))
-
+   local rad = (math.atan2(c:unpack()))
 
    if (b.x - a.x) < 0 then
       rad = math.tau - rad 
