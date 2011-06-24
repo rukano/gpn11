@@ -23,10 +23,14 @@ function love.load()
    height = love.graphics.getHeight()
    screen_center = Vector.new(width/2, height/2)
    
+   math.tau = math.pi * 2
+
    -- initial graphics setup
    love.graphics.setBackgroundColor(100, 100, 100)
    love.graphics.setBlendMode("alpha")
    love.graphics.setMode(width, height, false, true, 0)
+
+   love.mouse.setVisible(false)
 
    -- physics
    world = world or love.physics.newWorld(0, 0, width, height)
@@ -60,7 +64,7 @@ function love.load()
    end
 
 
-   math.tau = math.pi * 2
+
    -- player
    player = player or {}
    player.image = player.image or  love.graphics.newImage("img/player.png")
@@ -74,7 +78,6 @@ function love.load()
    magnet.image = love.graphics.newImage("img/magnet.png")
    magnet.pos = Vector.new(love.mouse.getPosition())
    magnet.rot = 0
-   magnet.force = 1
    magnet.color = {255,255,255,255}
 end
 
@@ -87,17 +90,15 @@ function love.update(dt)
    magnet.pos.x, magnet.pos.y = love.mouse.getPosition()
    magnet.rot = getAngle(Vector.new(player.body:getPosition()), magnet.pos)
 
-
+   local line = (magnet.pos 
+                  - Vector.new(player.body:getPosition()))
+   local force = line * (1/line:len()) * 5
    if love.mouse.isDown("l") then
-      magnet.color = {0,0,255,255}
-      player.body:applyForce(((magnet.pos 
-                               - Vector.new(player.body:getPosition())) 
-                           * -1):unpack())
+      magnet.color = {0, 255, 0,255}
+      player.body:applyForce((force * -1):unpack())
    elseif love.mouse.isDown("r") then
       magnet.color = {255,0,0,255}
-      player.body:applyForce(((magnet.pos 
-                               - Vector.new(player.body:getPosition())) 
-                           * 1):unpack())
+      player.body:applyForce((force):unpack())
    else
       magnet.color = {255,255,255,255}
    end
