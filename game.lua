@@ -1,5 +1,7 @@
 game = Gamestate.new()
 
+frames = 0
+
 function game:init()
 end
 
@@ -9,8 +11,8 @@ end
 
 function game:update(dt)
    world:update(dt)
-   magnet.pos.x, magnet.pos.y = love.mouse.getPosition()
 
+   magnet.pos.x, magnet.pos.y = love.mouse.getPosition()
    magnet.rot = getAngle(Vector.new(player.body:getPosition()), magnet.pos)
 
    -- TODO: make force exponential!
@@ -27,6 +29,13 @@ function game:update(dt)
    else
       magnet.color = {255,255,255,255}
    end
+
+   frames = frames + 1
+
+   if frames % 60 == 0 then
+      Enemy(5)
+   end
+
 end
 
 
@@ -35,8 +44,8 @@ end
 function game:draw()
    drawBG()
 
-   for i,v in pairs(limits.shapes) do
-      love.graphics.setColor(0, 0, 0)
+   for k,v in pairs(limits.shapes) do
+      love.graphics.setColor(0, 0, 25, 255)
       love.graphics.polygon("fill", v:getPoints())
    end
 
@@ -45,6 +54,16 @@ function game:draw()
                       player.body:getX(), 
                       player.body:getY(), 0, 1, 1, 
                       player.image:getWidth()/2, player.image:getHeight()/2)
+
+
+   for k,v in pairs(_enemies) do
+      love.graphics.setColor(255,50,50,255)
+      love.graphics.circle("fill",
+			   v.body:getX(),
+			   v.body:getY(),
+			   v.shape:getRadius(),
+			   48)
+   end
 
    love.graphics.setColor(unpack(magnet.color))
    love.graphics.draw(magnet.image, 
@@ -60,11 +79,15 @@ end
 
 function game:enter(previous)
    print("starting the game, initialize stuff!")
+   
+   frames = 0
+
    -- physics
    world = world or love.physics.newWorld(0, 0, width, height)
    world:setMeter(64)
    world:setCallbacks(bang)
    world:setGravity(0, 0)
+--   world:setGravity(0, 100)
 
    limits = limits or {}
    limits.bodies = limits.bodies or {}
