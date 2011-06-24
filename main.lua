@@ -109,7 +109,6 @@ function love.update(dt)
    if love.mouse.isDown("l") then
       magnet.color = {0, 255, 0,255}
       player.body:applyForce((force * -1):unpack())
-
    elseif love.mouse.isDown("r") then
       magnet.color = {255,0,0,255}
       player.body:applyForce((force):unpack())
@@ -128,10 +127,17 @@ function love.draw()
    end
 
    love.graphics.setColor(255,255,255,255)
-   love.graphics.draw(player.image, player.body:getX(), player.body:getY(), 0, 1, 1, player.image:getWidth()/2, player.image:getHeight()/2)
+   love.graphics.draw(player.image, 
+                      player.body:getX(), 
+                      player.body:getY(), 0, 1, 1, 
+                      player.image:getWidth()/2, player.image:getHeight()/2)
 
    love.graphics.setColor(unpack(magnet.color))
-   love.graphics.draw(magnet.image, magnet.pos.x, magnet.pos.y, magnet.rot + (math.pi/2), 1, 1, magnet.image:getWidth(), magnet.image:getHeight()/2)
+   love.graphics.draw(magnet.image, 
+                      magnet.pos.x, 
+                      magnet.pos.y, 
+                      magnet.rot + (math.pi/2), 1, 1, 
+                      magnet.image:getWidth(), magnet.image:getHeight()/2)
 end
 
 --------------------------------------------------------------------------------
