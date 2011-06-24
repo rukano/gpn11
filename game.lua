@@ -12,6 +12,8 @@ end
 function game:update(dt)
    world:update(dt)
 
+   print(_bomb_count, _enemy_count)
+
    magnet.pos.x, magnet.pos.y = love.mouse.getPosition()
    magnet.rot = getAngle(Vector.new(player.body:getPosition()), magnet.pos)
 
@@ -152,9 +154,7 @@ function game:keypressed (key)
    end
 
    if key == " " then
-      Bomb(player.pos)
-   elseif key == "escape" then
-      _bombs[math.random(#_bombs)]:destroy()
+      Bomb({player.body:getPosition()})
    end
 end
 
@@ -249,5 +249,13 @@ function drawObjects ()
 end
 
 function on_collision (a, b, coll)
+   if a.type == "bomb" and b.type == "enemy" then
+      a.instance:explode()
+      b.instance:destroy()
+   elseif b.type == "bomb" and a.type == "enemy" then
+      b.instance:explode()
+      a.instance:destroy()
+   else return end
+
 --   print(a.type, b.type, coll)
 end
