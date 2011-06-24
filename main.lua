@@ -89,10 +89,10 @@ function love.update(dt)
 
    if love.mouse.isDown("l") then
       magnet.color = {0,0,255,255}
-      player.body:applyForce(0, 100)
+      player.body:applyForce(0, 100) -- TODO use the mouse vector as force point * multiplicator
    elseif love.mouse.isDown("r") then
       magnet.color = {255,0,0,255}
-      player.body:applyForce(0, -100)
+      player.body:applyForce(0, -100) -- TODO use the mouse vector
    else
       magnet.color = {255,255,255,255}
    end
