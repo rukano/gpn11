@@ -51,8 +51,12 @@ function love.load()
    limiters.left = {x=0, y=0, w=800, h=600}
 
    for k,v in pairs(limiters) do
-      limits.bodies[v] = limits.bodies[v] or love.physics.newBody(world, v.x, v.y, 0, 0)
-      limits.shapes[v] = limits.shapes[v] or love.physics.newRectangleShape(limits.bodies[v], width/2, r, width, minWidth, 0)
+      local r = 20
+      limits.bodies[v] = limits.bodies[v] 
+         or love.physics.newBody(world, v.x, v.y, 0, 0)
+      limits.shapes[v] = limits.shapes[v]
+         or love.physics.newRectangleShape(limits.bodies[v], 
+                                           width/2, r, width, minWidth, 0)
    end
 
 
@@ -64,10 +68,6 @@ function love.load()
    player.shape = player.shape or love.physics.newCircleShape(player.body, 0, 0, 20)
 
    player.pos = player.pos or Vector.new(width/2, height/2)
-   player.dpos = player.dpos or Vector.new(0, 0)
-   player.rotation = player.rotation or 0
-   player.drot = player.drot or 0
-   player.rot = player.rot or 0
 
    -- magnet pointer
    magnet = {}
@@ -85,14 +85,19 @@ end
 function love.update(dt)
    world:update(dt)
    magnet.pos.x, magnet.pos.y = love.mouse.getPosition()
-   magnet.rot = getAngle(player.pos, magnet.pos)
+   magnet.rot = getAngle(Vector.new(player.body:getPosition()), magnet.pos)
+
 
    if love.mouse.isDown("l") then
       magnet.color = {0,0,255,255}
-      player.body:applyForce(0, 100) -- TODO use the mouse vector as force point * multiplicator
+      player.body:applyForce(((magnet.pos 
+                               - Vector.new(player.body:getPosition())) 
+                           * -1):unpack())
    elseif love.mouse.isDown("r") then
       magnet.color = {255,0,0,255}
-      player.body:applyForce(0, -100) -- TODO use the mouse vector
+      player.body:applyForce(((magnet.pos 
+                               - Vector.new(player.body:getPosition())) 
+                           * 1):unpack())
    else
       magnet.color = {255,255,255,255}
    end
