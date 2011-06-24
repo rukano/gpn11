@@ -66,7 +66,17 @@ end
 
 function love.update(dt)
    magnet.pos.x, magnet.pos.y = love.mouse.getPosition()
-   magnet.rot = (1 - math.atan2( ( player.pos - magnet.pos ):unpack() ) ) % (2 * math.pi)
+--   magnet.rot = (1 - math.atan2( ( player.pos - magnet.pos ):unpack() ) ) % (2 * math.pi)
+--   magnet.rot = math.acos((magnet.pos - screen_center).y / magnet.pos:dist(screen_center))
+
+--   A = magnet.pos:normalized()
+--   B = screen_center:normalized()
+
+--   magnet.rot = math.acos( -(A.y - B.y) / A:dist(B))
+
+   magnet.rot = getAngle(screen_center, magnet.pos)
+
+   print(magnet.rot)
 
    if love.mouse.isDown("l") then
       magnet.color = {0,0,255,255}
@@ -102,6 +112,15 @@ function love.draw()
    love.graphics.setColor(unpack(magnet.color))
    love.graphics.draw(magnet.image, magnet.pos.x, magnet.pos.y, magnet.rot, 1, 1, magnet.image:getWidth(), magnet.image:getHeight()/2)
 
+
+-- test...   basic trigonometry... :-(
+   love.graphics.setColor(0, 0, 0, 255)
+   love.graphics.line(screen_center.x, screen_center.y, magnet.pos.x, magnet.pos.y)
+   love.graphics.line(screen_center.x, screen_center.y, magnet.pos.x, screen_center.y)
+   love.graphics.line(magnet.pos.x, screen_center.y, magnet.pos.x, magnet.pos.y)
+
+
+
 end
 
 
@@ -109,3 +128,16 @@ end
 -- FUNCTIONS
 --------------------------------------------------------------------------------
 
+
+function getAngle (a,b)
+   local c = Vector.new(a.x, b.y)
+   local dx = a.x - b.x
+   local dy = a.y - b.y
+   local len = math.sqrt( dx * dx + dy * dy )
+
+-- BIG TODO
+   local angle = 0
+   
+
+   return angle
+end
