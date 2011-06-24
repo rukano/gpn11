@@ -1,12 +1,27 @@
 #+STARTUP: indent
 #+STARTUP: content
 
+* TODO MUSIK
+** TODO Gameplay musik pimpen und render
+** TODO Menu Musik
+** TODO End game win/loose Jingle
+** TODO Sound Effects
+
+* TODO GAMEPLAY
+** TODO acc pimpen
+** TODO Enemiesv
+** TODO Weapons
+
+* TODO GRAPHICS
+** TODO Background tiles
+** TODO Delimiter Tiles
+** TODO Enemies imgs
+** TODO Weapons imgs
+
 * MAGNETISMUS
 ** Project Codename: MagNet
 ** Concept:
-- VVVVVV Clone
-- Magnetische felder im stage
-- Puzzle + Endboss
+- VVVVVV Clone / Tilt to live 
 - Endboss = Magnetische charactere:
   - Magneto (xmen)
   - Magneto (band)
