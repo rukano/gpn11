@@ -19,9 +19,10 @@ lick.directory = "."
 -- INIT
 
 function love.load()
-   width = 650
-   height = 650
-
+   width = love.graphics.getWidth()
+   height = love.graphics.getHeight()
+   screen_center = Vector.new{width/2, height/2}
+   
    -- initial graphics setup
    love.graphics.setBackgroundColor(100, 100, 200)
    love.graphics.setBlendMode("alpha")
@@ -64,7 +65,7 @@ end
 
 function love.update(dt)
    magnet.pos.x, magnet.pos.y = love.mouse.getPosition()
-
+--   magnet.rot = math.atan2( (magnet.pos - screen_center):unpack() )
 
    if love.keyboard.isDown("left") then
       player.push(dt, -1)
