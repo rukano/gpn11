@@ -32,9 +32,13 @@ function game:update(dt)
 
    frames = frames + 1
 
-   if frames % 60 == 0 then
-      Enemy(5)
+   if frames % 100 == 0 then
+      Enemy()
    end
+   if frames % 200 == 0 then
+      Powerup()
+   end
+
 
 end
 
@@ -56,14 +60,7 @@ function game:draw()
                       player.image:getWidth()/2, player.image:getHeight()/2)
 
 
-   for k,v in pairs(_enemies) do
-      love.graphics.setColor(255,50,50,255)
-      love.graphics.circle("fill",
-			   v.body:getX(),
-			   v.body:getY(),
-			   v.shape:getRadius(),
-			   48)
-   end
+   drawObjects()
 
    love.graphics.setColor(unpack(magnet.color))
    love.graphics.draw(magnet.image, 
@@ -208,4 +205,26 @@ function drawBG ()
 	 love.graphics.draw(bg_img, j * tile, i * tile, 0, 1, 1)
       end
    end
+end
+
+function drawObjects ()
+   for k,v in pairs(_powerups) do
+      love.graphics.setColor(unpack(v.color))
+      love.graphics.circle("fill",
+			   v.body:getX(),
+			   v.body:getY(),
+			   v.shape:getRadius(),
+			   48)
+   end
+
+
+   for k,v in pairs(_enemies) do
+      love.graphics.setColor(unpack(v.color))
+      love.graphics.circle("fill",
+			   v.body:getX(),
+			   v.body:getY(),
+			   v.shape:getRadius(),
+			   48)
+   end
+   
 end
