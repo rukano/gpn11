@@ -13,6 +13,7 @@ require "menu"
 require "game"
 require "game_over"
 require "highscore"
+require "classes"
 
 -- lick.clearFlag = true
 lick.reset = true
