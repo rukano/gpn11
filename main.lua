@@ -54,6 +54,18 @@ function love.load()
                     player.drot = player.drot + (dt * 0.1 * direction)
                  end
 
+   player.attract = function(dt, point)
+--                    print("moving")
+                    player.pos = player.pos - point
+                 end
+
+   player.moveTo = function(dt, point)
+--                    print("moving")
+                    player.pos = point
+                 end
+
+
+
    -- magnet pointer
    magnet = {}
    magnet.image = love.graphics.newImage("img/magnet.png")
@@ -68,19 +80,11 @@ end
 
 function love.update(dt)
    magnet.pos.x, magnet.pos.y = love.mouse.getPosition()
---   magnet.rot = (1 - math.atan2( ( player.pos - magnet.pos ):unpack() ) ) % (2 * math.pi)
---   magnet.rot = math.acos((magnet.pos - screen_center).y / magnet.pos:dist(screen_center))
-
---   A = magnet.pos:normalized()
---   B = screen_center:normalized()
-
---   magnet.rot = math.acos( -(A.y - B.y) / A:dist(B))
-
    magnet.rot = getAngle(player.pos, magnet.pos)
-
 
    if love.mouse.isDown("l") then
       magnet.color = {0,0,255,255}
+      player.moveTo(dt, magnet.pos)
    elseif love.mouse.isDown("r") then
       magnet.color = {255,0,0,255}
    else
