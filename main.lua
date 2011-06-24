@@ -28,6 +28,27 @@ function love.load()
    love.graphics.setBlendMode("alpha")
    love.graphics.setMode(width, height, false, true, 0)
 
+   -- physics
+   world = world or love.physics.newWorld(0, 0, width, height)
+   world:setMeter(64)
+   world:setCallbacks(bang)
+   world:setGravity(0, 22000)
+
+   limits = limits or {}
+   limits.bodies = limits.bodies or {}
+   limits.shapes = limits.shapes or {}
+
+   o = o or {}
+   o.bodies = o.bodies or {}
+   o.shapes = o.shapes or {}
+
+   minWidth = 5
+
+   for i,v in ipairs{"up", "right", "down", "left"} do
+      limits.bodies[v] = limits.bodies[v] or love.physics.newBody(world, ((i-1)%2)*width, 0, 0, 0)
+      limits.shapes[v] = limits.shapes[v] or love.physics.newRectangleShape(limits.bodies[v], width/2, 0, width, minWidth*2, 0)
+   end
+
 
    math.tau = math.pi * 2
    -- player
@@ -68,6 +89,9 @@ end
 
 
 function love.update(dt)
+   world:update(dt)
+
+
    magnet.pos.x, magnet.pos.y = love.mouse.getPosition()
    magnet.rot = getAngle(player.pos, magnet.pos)
 
@@ -103,6 +127,9 @@ end
 --------------------------------------------------------------------------------
 -- DRAW
 function love.draw()
+
+  love.graphics.setColor(72, 160, 14)
+  love.graphics.polygon("fill", limits.shapes.up:getPoints())
 
    love.graphics.setColor(255,255,255,255)
    love.graphics.draw(player.image, player.pos.x, player.pos.y, player.rot, 1, 1, player.image:getWidth()/2, player.image:getHeight()/2)
