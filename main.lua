@@ -76,7 +76,7 @@ function love.update(dt)
 
 --   magnet.rot = math.acos( -(A.y - B.y) / A:dist(B))
 
-   magnet.rot = getAngle(screen_center, magnet.pos)
+   magnet.rot = getAngle(player.pos, magnet.pos)
 
 
    if love.mouse.isDown("l") then
@@ -111,15 +111,15 @@ function love.draw()
    love.graphics.setColor(255,255,255,255)
    love.graphics.draw(player.image, player.pos.x, player.pos.y, player.rot, 1, 1, player.image:getWidth()/2, player.image:getHeight()/2)
    love.graphics.setColor(unpack(magnet.color))
-   love.graphics.draw(magnet.image, magnet.pos.x, magnet.pos.y, magnet.rot, 1, 1, magnet.image:getWidth(), magnet.image:getHeight()/2)
+   love.graphics.draw(magnet.image, magnet.pos.x, magnet.pos.y, magnet.rot + (math.pi/2), 1, 1, magnet.image:getWidth(), magnet.image:getHeight()/2)
 
 
 -- test...   basic trigonometry... :-(
-   love.graphics.setColor(0, 0, 0, 255)
-   love.graphics.print(getAngle(screen_center, magnet.pos) / (2 * math.pi), 10, 10, 0, 2, 2)
-   love.graphics.line(screen_center.x, screen_center.y, magnet.pos.x, magnet.pos.y)
-   love.graphics.line(screen_center.x, screen_center.y, magnet.pos.x, screen_center.y)
-   love.graphics.line(magnet.pos.x, screen_center.y, magnet.pos.x, magnet.pos.y)
+   -- love.graphics.setColor(0, 0, 0, 255)
+   -- love.graphics.print(getAngle(screen_center, magnet.pos) / (2 * math.pi), 10, 10, 0, 2, 2)
+   -- love.graphics.line(screen_center.x, screen_center.y, magnet.pos.x, magnet.pos.y)
+   -- love.graphics.line(screen_center.x, screen_center.y, magnet.pos.x, screen_center.y)
+   -- love.graphics.line(magnet.pos.x, screen_center.y, magnet.pos.x, magnet.pos.y)
    
 end
 
