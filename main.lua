@@ -24,10 +24,12 @@ function love.load()
    screen_center = Vector.new(width/2, height/2)
    
    -- initial graphics setup
-   love.graphics.setBackgroundColor(100, 100, 200)
+   love.graphics.setBackgroundColor(100, 100, 100)
    love.graphics.setBlendMode("alpha")
    love.graphics.setMode(width, height, false, true, 0)
 
+
+   math.tau = math.pi * 2
    -- player
    player = {}
    player.image = love.graphics.newImage("img/player.png")
@@ -76,7 +78,6 @@ function love.update(dt)
 
    magnet.rot = getAngle(screen_center, magnet.pos)
 
-   print(magnet.rot)
 
    if love.mouse.isDown("l") then
       magnet.color = {0,0,255,255}
@@ -115,12 +116,11 @@ function love.draw()
 
 -- test...   basic trigonometry... :-(
    love.graphics.setColor(0, 0, 0, 255)
+   love.graphics.print(getAngle(screen_center, magnet.pos) / (2 * math.pi), 10, 10, 0, 2, 2)
    love.graphics.line(screen_center.x, screen_center.y, magnet.pos.x, magnet.pos.y)
    love.graphics.line(screen_center.x, screen_center.y, magnet.pos.x, screen_center.y)
    love.graphics.line(magnet.pos.x, screen_center.y, magnet.pos.x, magnet.pos.y)
-
-
-
+   
 end
 
 
@@ -130,14 +130,19 @@ end
 
 
 function getAngle (a,b)
-   local c = Vector.new(a.x, b.y)
-   local dx = a.x - b.x
-   local dy = a.y - b.y
-   local len = math.sqrt( dx * dx + dy * dy )
+   local c = Vector.new(math.abs(a.x - b.x), 
+                        math.abs(a.y - b.y))
+      
+   local rad = (math.atan2(
+              c:normalized():unpack()))
 
--- BIG TODO
-   local angle = 0
-   
 
-   return angle
+   if (b.x - a.x) < 0 then
+      rad = math.tau - rad 
+   end
+   if (b.y - a.y) > 0 then
+      rad =  math.tau - ((rad) + (math.pi))
+    end
+
+   return rad
 end
