@@ -65,7 +65,7 @@ end
 
 function love.update(dt)
    magnet.pos.x, magnet.pos.y = love.mouse.getPosition()
-   magnet.rot = math.atan2( (magnet.pos - screen_center):unpack() )
+   magnet.rot = (1 - math.atan2( ( player.pos - magnet.pos ):unpack() ) ) % (2 * math.pi)
 
    if love.keyboard.isDown("left") then
       player.push(dt, -1)
@@ -87,8 +87,12 @@ end
 --------------------------------------------------------------------------------
 -- DRAW
 function love.draw()
-   love.graphics.draw(player.image, player.pos.x, player.pos.y, player.rot, 1, 1, player.image:getWidth()/2, player.image:getHeight()/2)
-   love.graphics.draw(magnet.image, magnet.pos.x, magnet.pos.y, magnet.rot, 1, 1, magnet.image:getWidth(), magnet.image:getHeight()/2)
+   love.graphics.draw(player.image, player.pos.x, player.pos.y, 
+                      player.rot, 1, 1, player.image:getWidth()/2, 
+                      player.image:getHeight()/2)
+   love.graphics.draw(magnet.image, 
+                      magnet.pos.x, magnet.pos.y, magnet.rot, 1, 1, 
+                      magnet.image:getWidth(), magnet.image:getHeight()/2)
 end
 
 
