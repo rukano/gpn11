@@ -11,7 +11,7 @@ HC = require "HardonCollider"
 
 
 
---lick.clearFlag = true
+-- lick.clearFlag = true
 lick.reset = true
 lick.directory = "."
 
@@ -24,12 +24,11 @@ function love.load()
    screen_center = Vector.new(width/2, height/2)
    
    math.tau = math.pi * 2
+   score = 0
 
-   -- initial graphics setup
    love.graphics.setBackgroundColor(100, 100, 100)
    love.graphics.setBlendMode("alpha")
    love.graphics.setMode(width, height, false, true, 0)
-
    love.mouse.setVisible(false)
 
    -- physics
@@ -46,7 +45,7 @@ function love.load()
    o.bodies = o.bodies or {}
    o.shapes = o.shapes or {}
 
-   minWidth = 10
+   half_limiter = 10
 
    limiters = {}
    limiters.up = {x=0, y=0, w=width, h=20}
@@ -61,29 +60,29 @@ function love.load()
       limits.shapes[v] = limits.shapes[v]
          or love.physics.newRectangleShape(limits.bodies[v], 
                                            v.w/2, v.h/2, v.w, v.h,  0)
+      limits.shapes[v]:setFriction(0.8)
+      limits.shapes[v]:setDensity(1)
+      limits.shapes[v]:setRestitution(0.1)
    end
 
-
+   -- BG
+   bg_img = love.graphics.newImage("img/bg_tile.png")
 
    -- player
    player = player or {}
    player.image = player.image or  love.graphics.newImage("img/player.png")
-   player.body = player.body or love.physics.newBody(world, width/2, height/2, 15, 0)
-   player.shape = player.shape or love.physics.newCircleShape(player.body, 0, 0, 20)
-
+   player.body = player.body or love.physics.newBody(world, width/2, height/2, 40, 0)
+   player.shape = player.shape or love.physics.newRectangleShape(
+      player.body,
+      0,
+      0,
+      player.image:getWidth(),
+      player.image:getHeight()
+   )
+   player.shape:setDensity(100)
+   player.shape:setFriction(0.5)
+   player.shape:setRestitution(0.1)
    player.pos = player.pos or Vector.new(width/2, height/2)
-
-   player.attract = function(dt, point)
---                    print("moving")
-                    player.pos = player.pos - point
-                 end
-
-   player.moveTo = function(dt, point)
---                    print("moving")
-                    player.pos = point
-                 end
-
-
 
    -- magnet pointer
    magnet = {}
@@ -91,6 +90,8 @@ function love.load()
    magnet.pos = Vector.new(love.mouse.getPosition())
    magnet.rot = 0
    magnet.color = {255,255,255,255}
+   magnet.power = 1
+
 end
 
 --------------------------------------------------------------------------------
@@ -103,9 +104,11 @@ function love.update(dt)
 
    magnet.rot = getAngle(Vector.new(player.body:getPosition()), magnet.pos)
 
+   -- TODO: make force exponential!
    local line = (magnet.pos 
                   - Vector.new(player.body:getPosition()))
-   local force = line * (1/line:len()) * 5
+   local force = line * (1/line:len()) * (100 * magnet.power)
+
    if love.mouse.isDown("l") then
       magnet.color = {0, 255, 0,255}
       player.body:applyForce((force * -1):unpack())
@@ -121,6 +124,8 @@ end
 --------------------------------------------------------------------------------
 -- DRAW
 function love.draw()
+   drawBG()
+
    for i,v in pairs(limits.shapes) do
       love.graphics.setColor(0, 0, 0)
       love.graphics.polygon("fill", v:getPoints())
@@ -138,7 +143,20 @@ function love.draw()
                       magnet.pos.y, 
                       magnet.rot + (math.pi/2), 1, 1, 
                       magnet.image:getWidth(), magnet.image:getHeight()/2)
+
+   drawMagnetism()
+   drawScore()
 end
+
+
+function love.keypressed (key)
+   if key == "up" then
+      magnet.power = magnet.power + 1
+   elseif key == "down" then 
+      magnet.power = magnet.power - 1      
+   end
+end
+
 
 --------------------------------------------------------------------------------
 -- FUNCTIONS
@@ -158,4 +176,32 @@ function getAngle (a,b)
     end
 
    return rad
+ end
+
+
+function drawMagnetism ()
+   love.graphics.setColor(100, 200, 255, 255)
+   love.graphics.setLineWidth(1)
+   love.graphics.print("Magnet Power: " .. tostring(magnet.power * 10) .. "%", 20, 3)
+   love.graphics.rectangle("fill", 160, 3, magnet.power * 10, 13)
+   love.graphics.setColor(255, 100, 255, 255)
+   love.graphics.rectangle("line", 160, 3, 100, 13)
+end
+
+
+function drawScore ()
+   love.graphics.setColor(100, 200, 255, 255)
+   love.graphics.print("Score: " .. tostring(score), width-200, 3)
+end
+
+
+function drawBG ()
+   local tile = 32
+   local num = {cols=width/tile, rows=height/tile}
+   love.graphics.setColor(100, 100, 100, 10)
+   for i=0, num.rows do
+      for j=0, num.cols do
+	 love.graphics.draw(bg_img, j * tile, i * tile, 0, 1, 1)
+      end
+   end
 end
