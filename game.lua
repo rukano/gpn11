@@ -38,8 +38,6 @@ function game:update(dt)
    if frames % 200 == 0 then
       Powerup()
    end
-
-
 end
 
 
@@ -61,14 +59,7 @@ function game:draw()
 
 
    drawObjects()
-
-   love.graphics.setColor(unpack(magnet.color))
-   love.graphics.draw(magnet.image, 
-                      magnet.pos.x, 
-                      magnet.pos.y, 
-                      magnet.rot + (math.pi/2), 1, 1, 
-                      magnet.image:getWidth(), magnet.image:getHeight()/2)
-
+   drawMagnetMouse()
    drawMagnetism()
    drawScore()
 end
@@ -84,7 +75,7 @@ function game:enter(previous)
    world:setMeter(64)
    world:setCallbacks(bang)
    world:setGravity(0, 0)
---   world:setGravity(0, 100)
+   world:setCallbacks(on_collision)
 
    limits = limits or {}
    limits.bodies = limits.bodies or {}
@@ -112,6 +103,7 @@ function game:enter(previous)
       limits.shapes[v]:setFriction(0.8)
       limits.shapes[v]:setDensity(1)
       limits.shapes[v]:setRestitution(0.1)
+      limits.shapes[v]:setData{type="border"}
    end
 
    -- BG
@@ -131,6 +123,7 @@ function game:enter(previous)
    player.shape:setDensity(100)
    player.shape:setFriction(0.5)
    player.shape:setRestitution(0.1)
+   player.shape:setData{type="player"}
    player.pos = player.pos or Vector.new(width/2, height/2)
 
    -- magnet pointer
@@ -156,6 +149,12 @@ function game:keypressed (key)
       magnet.power = magnet.power + 1
    elseif key == "down" then 
       magnet.power = magnet.power - 1      
+   end
+
+   if key == " " then
+      Bomb(player.pos)
+   elseif key == "escape" then
+      _bombs[math.random(#_bombs)]:destroy()
    end
 end
 
@@ -199,7 +198,7 @@ end
 function drawBG ()
    local tile = 32
    local num = {cols=width/tile, rows=height/tile}
-   love.graphics.setColor(100, 100, 100, 10)
+   love.graphics.setColor(100, 100, 100, 255)
    for i=0, num.rows do
       for j=0, num.cols do
 	 love.graphics.draw(bg_img, j * tile, i * tile, 0, 1, 1)
@@ -207,7 +206,18 @@ function drawBG ()
    end
 end
 
+
+function drawMagnetMouse ()
+   love.graphics.setColor(unpack(magnet.color))
+   love.graphics.draw(magnet.image, 
+                      magnet.pos.x, 
+                      magnet.pos.y, 
+                      magnet.rot + (math.pi/2), 1, 1, 
+                      magnet.image:getWidth(), magnet.image:getHeight()/2)
+end
+
 function drawObjects ()
+   -- POWERUPS
    for k,v in pairs(_powerups) do
       love.graphics.setColor(unpack(v.color))
       love.graphics.circle("fill",
@@ -216,8 +226,7 @@ function drawObjects ()
 			   v.shape:getRadius(),
 			   48)
    end
-
-
+   -- ENEMIES
    for k,v in pairs(_enemies) do
       love.graphics.setColor(unpack(v.color))
       love.graphics.circle("fill",
@@ -226,5 +235,19 @@ function drawObjects ()
 			   v.shape:getRadius(),
 			   48)
    end
+   -- BOMBS
+   for k,v in pairs(_bombs) do
+      love.graphics.setColor(unpack(v.color))
+      love.graphics.circle("fill",
+			   v.body:getX(),
+			   v.body:getY(),
+			   v.shape:getRadius(),
+			   48)
+   end
+
    
+end
+
+function on_collision (a, b, coll)
+--   print(a.type, b.type, coll)
 end
