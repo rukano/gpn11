@@ -45,10 +45,10 @@ function love.load()
    minWidth = 10
 
    limiters = {}
-   limiters.up = {x=0, y=0, w=800, h=600}
-   limiters.right = {x=0, y=0, w=800, h=600}
-   limiters.down = {x=0, y=0, w=800, h=600}
-   limiters.left = {x=0, y=0, w=800, h=600}
+   limiters.up = {x=0, y=0, w=width, h=20}
+   limiters.right = {x=width - 20, y=0, w=20, h=height}
+   limiters.down = {x=0, y=height - 20, w=width, h=20}
+   limiters.left = {x=0, y=0, w=20, h=height}
 
    for k,v in pairs(limiters) do
       local r = 20
@@ -56,7 +56,7 @@ function love.load()
          or love.physics.newBody(world, v.x, v.y, 0, 0)
       limits.shapes[v] = limits.shapes[v]
          or love.physics.newRectangleShape(limits.bodies[v], 
-                                           width/2, r, width, minWidth, 0)
+                                           v.w/2, v.h/2, v.w, v.h,  0)
    end
 
 
@@ -108,7 +108,7 @@ end
 -- DRAW
 function love.draw()
    for i,v in pairs(limits.shapes) do
-      love.graphics.setColor(72, 160, 14)
+      love.graphics.setColor(0, 0, 0)
       love.graphics.polygon("fill", v:getPoints())
    end
 
