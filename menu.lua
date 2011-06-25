@@ -5,10 +5,12 @@ function menu:init ()
 end
 
 function menu:enter(previous)
+   menu_music = love.audio.play("music/menu.ogg", "stream", true)
+
    love.graphics.setBackgroundColor(0, 0, 0, 255)
    love.graphics.setFont(48)
 
-   items = items or {"[F1] start","[F2] highscores","[F3] credits", "[F4] quit"}
+   items = items or {"[F1] start","[F2] highscores","[F3] credits", "[F4] quit", " ", "[f12] fullscreen"}
 
    star_img = star_img or love.graphics.newImage("LICK/lib/images/star.png")
    magnet_img = magnet_img or love.graphics.newImage("img/magnet.png")
@@ -34,7 +36,7 @@ function menu:enter(previous)
 end
 
 function menu:leave()
-
+   love.audio.stop(menu_music)
 end
 
 function menu:update(dt)
@@ -60,10 +62,6 @@ function menu:keypressed(key)
    elseif key == "f4" then
       love.quit()
    end
-end
-
-function menu:mousepressed(x, y, btn)
-
 end
 
 --------------------------------------------------------------------------------
@@ -92,7 +90,7 @@ end
 
 function drawTitle ()
    love.graphics.setColor(100, 100, 255, 255)
-   love.graphics.print("Mag.Net", 100, 100, 0, 1, 1)
+   love.graphics.print("ich mag net", 100, 100, 0, 1, 1)
 end
 
 function drawItems ()

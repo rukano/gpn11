@@ -76,7 +76,7 @@ function game:enter(previous)
    frames = 0
    love.graphics.setFont(10)
    
-
+   game_music = love.audio.play("music/gametheme.ogg", "stream", true)
    -- physics
    world = world or love.physics.newWorld(0, 0, width, height)
    world:setMeter(64)
@@ -148,6 +148,8 @@ function game:enter(previous)
 end
 
 function game:leave()
+   love.audio.stop(game_music)
+
    print("----------------------------------")
    print("leaving the game... goto highscore")
    print("PLS Remove bodies, etc!!!")
@@ -173,6 +175,24 @@ function game:keypressed (key)
 
    if key == " " then
       Bomb({player.body:getPosition()})
+   end
+end
+
+function game:mousepressed(x, y, btn)
+   if btn == 'l' then
+      magnet_snd_repel = love.audio.play("sfx/repel.ogg", "stream", true)
+   end
+   if btn == 'r' then
+      magnet_snd_attract = love.audio.play("sfx/attract.ogg", "stream", true)
+   end
+end
+
+function game:mousereleased(x, y, btn)
+   if btn == 'l' then
+      love.audio.stop(magnet_snd_repel)
+   end
+   if btn == 'r' then
+      love.audio.stop(magnet_snd_attract)
    end
 end
 
