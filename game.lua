@@ -66,8 +66,9 @@ function game:draw()
    if player.alive then
       love.graphics.draw(player.image, 
                          player.body:getX(), 
-                         player.body:getY(), 0, 1, 1, 
-                         player.image:getWidth()/2, player.image:getHeight()/2)
+                         player.body:getY(), 0, player.scale, player.scale, 
+                         player.image:getWidth()/2 * player.scale, 
+                         player.image:getHeight()/2 * player.scale)
    end
 
    drawObjects()
@@ -138,6 +139,7 @@ function game:enter(previous)
    player.shape:setData{type="player"}
    player.pos = player.pos or Vector.new(width/2, height/2)
    player.life = 10
+   player.scale = 1
    player.alive = true
    player.looselife = function() 
                          player.life = player.life - 1 
@@ -145,13 +147,17 @@ function game:enter(previous)
                             player.alive = false
                             Gamestate.switch(gameover)
                          end
+                         player.scale = 0.7
+                         Timer.add(0.5, function() 
+                                           player.scale = 1
+                                        end)
                       end
-  player.getlife = function() 
+   player.getlife = function() 
                       player.life = math.min(player.life + 1, 10)
                    end
 
 
-   -- magnet pointer
+  -- magnet pointer
    magnet = {}
    magnet.image = love.graphics.newImage("img/magnet.png")
    magnet.pos = Vector.new(love.mouse.getPosition())
@@ -327,6 +333,7 @@ function on_collision (a, b, coll)
    if player_shape then
       if other then
          if other.type == "powerup" then
+            love.audio.play("sfx/powerup.ogg", "stream")
             if other.instance.health then
                player.getlife()
             else
@@ -335,6 +342,7 @@ function on_collision (a, b, coll)
             other.instance:destroy()
          elseif other.type == "enemy" then
             player.looselife()
+            love.audio.play("sfx/minuslife.ogg", "stream")
             other.instance:bounceOff(player_shape, coll)
          end
       end

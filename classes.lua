@@ -50,7 +50,7 @@ Enemy = Class{name="enemy", function(self, player_pos)
 			       if #_enemies <= max_enemies then 
 				  local x = math.random(width-80) + 40
 				  local y = math.random(height-80) + 40
-				  local r = 10
+				  local r = 20
                                   self.radius = r
 				  _enemy_count = _enemy_count + 1
 				  self.img = images.enemy
@@ -105,7 +105,7 @@ Powerup = Class{name="powerup", function(self, player_pos)
                                    Entity.construct(self)
 				   local x = math.random(width-80) + 40
 				   local y = math.random(height-80) + 40
-				   local r = 20
+				   local r = 15
                                   self.radius = r
 				   self.img = images.powerup
 
