@@ -23,8 +23,14 @@ function Entity:draw()
                          self.body:getY(),
                          self.body:getAngle(),
                          self.scale,
-                         self.scale
-                      )
+                         self.scale,
+                         -(self.img:getWidth() * self.scale * 0.5),
+                         -(self.img:getHeight() * self.scale * 0.5))
+   love.graphics.setColor(72, 160, 14, 125) 
+   love.graphics.circle("fill",self.body:getX(), self.body:getY(), self.radius)
+   -- love.graphics.setColor(72, 160, 14, 125) 
+   -- love.graphics.polygon("fill", self.shape:getPoints())
+
    end
 end
 
@@ -44,13 +50,16 @@ Enemy = Class{name="enemy", function(self, player_pos)
 				  local x = math.random(width-80) + 40
 				  local y = math.random(height-80) + 40
 				  local r = 5
+                                  self.radius = r
 				  _enemy_count = _enemy_count + 1
 				  self.img = images.enemy
 				  self.id = _enemy_count
 
 				  self.color = {255, 100, 100, 255}
-				  self.body = love.physics.newBody(world, x, y, 5, 0.5)
-				  self.shape = love.physics.newCircleShape(self.body, 0, 0, r)
+				  self.body = love.physics.newBody(
+                                     world, x, y, 5, 0.5)
+				  self.shape = love.physics.newCircleShape(
+                                     self.body, 0, 0, r)
 				  self.shape:setFriction(0)
 				  self.shape:setDensity(0.5)
 				  self.shape:setRestitution(0.7)
@@ -74,8 +83,10 @@ function Enemy:destroy()
 end
 
 function Enemy:bounceOff(ent, coll)
-   print(coll:getNormal())
---   self.body:applyImpulse(coll:getNormal(), 0, 0)
+--   print(coll:getNormal())
+   local x, y = coll:getNormal()
+   local factor = 0.5
+   self.body:applyImpulse(x * factor, y * factor, 0, 0)
 end
 
 --------------------------------------------------------------------------------
@@ -86,6 +97,7 @@ Powerup = Class{name="powerup", function(self, player_pos)
 				   local x = math.random(width-80) + 40
 				   local y = math.random(height-80) + 40
 				   local r = 10
+                                  self.radius = r
 				   self.img = images.powerup
 
 				   self.color = {100, 100, 255, 255}
@@ -114,6 +126,7 @@ Bomb = Class{name="bomb", function(self, player_pos)
                              Entity.construct(self)
 			     local x, y = unpack(player_pos)
 			     local r = 20
+                                  self.radius = r
 			     _bomb_count = _bomb_count + 1
 			     self.img = images.bomb
 			     self.id = _bomb_count

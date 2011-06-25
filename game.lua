@@ -152,6 +152,15 @@ function game:leave()
    print("leaving the game... goto highscore")
    print("PLS Remove bodies, etc!!!")
    print("----------------------------------")
+
+   player.shape = nil
+   player.body = nil
+
+   for _,i in pairs({_powerups, _enemies, _bombs}) do
+      for index,v in pairs(i) do
+         v:destroy()
+      end
+   end
    
 end
 
