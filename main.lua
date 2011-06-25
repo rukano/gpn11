@@ -28,14 +28,19 @@ function love.load()
 
    highscore.save()
 
-   
-
    width = love.graphics.getWidth()
    height = love.graphics.getHeight()
    screen_center = Vector.new(width/2, height/2)
    
    math.tau = math.pi * 2
    score = 0
+
+
+   images = {}
+   images.enemy = love.graphics.newImage("img/enemy.png")
+   images.powerup = love.graphics.newImage("img/power_up.png")
+   images.bomb = love.graphics.newImage("img/bomb.png")
+   images.boom = love.graphics.newImage("img/boom.png")
 
    love.graphics.setBackgroundColor(100, 100, 100)
    love.graphics.setBlendMode("alpha")

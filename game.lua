@@ -199,7 +199,7 @@ end
 
 
 function drawBG ()
-   love.graphics.setColor(255, 255, 255, 255)
+   love.graphics.setColor(0, 55, 55, 255)
    love.graphics.draw(bg_img, 0, 0)
 
    for k,v in pairs(limits.shapes) do
@@ -220,34 +220,11 @@ end
 
 function drawObjects ()
    -- POWERUPS
-   for k,v in pairs(_powerups) do
-      love.graphics.setColor(unpack(v.color))
-      love.graphics.circle("fill",
-			   v.body:getX(),
-			   v.body:getY(),
-			   v.shape:getRadius(),
-			   48)
+   for _,i in pairs({_powerups, _enemies, _bombs}) do
+      for k,v in pairs(i) do
+         v:draw()
+      end
    end
-   -- ENEMIES
-   for k,v in pairs(_enemies) do
-      love.graphics.setColor(unpack(v.color))
-      love.graphics.circle("fill",
-			   v.body:getX(),
-			   v.body:getY(),
-			   v.shape:getRadius(),
-			   48)
-   end
-   -- BOMBS
-   for k,v in pairs(_bombs) do
-      love.graphics.setColor(unpack(v.color))
-      love.graphics.circle("fill",
-			   v.body:getX(),
-			   v.body:getY(),
-			   v.shape:getRadius(),
-			   48)
-   end
-
-   
 end
 
 function on_collision (a, b, coll)
