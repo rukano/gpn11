@@ -12,13 +12,14 @@ max_enemies = 100
 
 
 Entity = Class(function(self) 
+                  self.color = {255, 255, 255, 255}
                   self.alive = true
                end)
 
 
 function Entity:draw()
    if self.alive then
-      love.graphics.setColor(255, 255, 255, 255)
+      love.graphics.setColor(unpack(self.color))
       love.graphics.draw(self.img, 
                          self.body:getX(),
                          self.body:getY(),
@@ -55,7 +56,7 @@ Enemy = Class{name="enemy", function(self, player_pos)
 				  self.img = images.enemy
 				  self.id = _enemy_count
 
-				  self.color = {255, 100, 100, 255}
+				  --self.color = {255, 100, 100, 255}
 				  self.body = love.physics.newBody(
                                      world, x, y, 5, 0.5)
 				  self.shape = love.physics.newCircleShape(
@@ -75,11 +76,19 @@ Enemy = Class{name="enemy", function(self, player_pos)
 
 Enemy:inherit(Entity)
 
+function Enemy:die()
+   score = score + 1
+   self.scale = self.scale * 3
+   Timer.add(0.1, function() self:destroy() end)
+end
+
 function Enemy:destroy()
-   self.alive = false
-   self.body:setX(math.random(-5000, -10))
-   self.body:setY(math.random(-5000, -10))
-   self.shape:setMask(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
+   if self.alive then
+      self.alive = false
+      self.body:setX(math.random(-5000, -10))
+      self.body:setY(math.random(-5000, -10))
+      self.shape:setMask(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
+   end
 end
 
 function Enemy:bounceOff(ent, coll)
@@ -100,7 +109,14 @@ Powerup = Class{name="powerup", function(self, player_pos)
                                   self.radius = r
 				   self.img = images.powerup
 
-				   self.color = {100, 100, 255, 255}
+
+                                   self.health = (math.random(0,100) > 80)
+                                   if self.health then
+                                      self.color = {255, 155, 0, 255}
+                                   else
+                                      self.color = {255, 255, 255, 255}
+                                   end
+
 				   self.body = love.physics.newBody(world, x, y, 20, 0.4)
 				   self.shape = love.physics.newCircleShape(self.body, 0, 0, r)
 				   self.shape:setFriction(1)
@@ -125,12 +141,13 @@ Powerup:inherit(Entity)
 Bomb = Class{name="bomb", function(self, player_pos)
                              Entity.construct(self)
 			     local x, y = unpack(player_pos)
+                             x = x + 20 * ez.choose{-1,1}
 			     local r = 20
                                   self.radius = r
 			     _bomb_count = _bomb_count + 1
 			     self.img = images.bomb
 			     self.id = _bomb_count
-			     self.color = {100, 255, 100, 255}
+			     --self.color = {100, 255, 100, 255}
 			     self.body = love.physics.newBody(world, x, y, 20, 1)
 			     self.shape = love.physics.newCircleShape(self.body, 0, 0, r)
 			     self.shape:setFriction(1)
@@ -152,13 +169,19 @@ function Bomb:explode()
    print("bomb exploded")
 
    for _, enemy in pairs(_enemies) do
-      local dist = Vector.new(self.body:getPosition()):dist(
-         Vector.new(enemy.body:getPosition()))
-      if dist < 100 then
-         enemy:destroy()
+      if enemy.body then
+         local dist = Vector.new(self.body:getPosition()):dist(
+            Vector.new(enemy.body:getPosition()))
+         if dist < 100 then
+            enemy:die()
+         end
       end
    end
+   if Vector.new(self.body:getPosition()):dist(
+      Vector.new(player.body:getPosition())) < 100 then
+      player.looselife()
+   end
    self.img = images.boom
-   Timer.add(0.5, function() self.alive = false end)
+   Timer.add(0.2, function() self.alive = false end)
 end
 

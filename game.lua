@@ -13,14 +13,27 @@ function game:update(dt)
    world:update(dt)
 
    magnet.pos.x, magnet.pos.y = love.mouse.getPosition()
-   magnet.rot = getAngle(Vector.new(player.body:getPosition()), magnet.pos)
+
 
    Timer.update(dt)
 
-   local line = (magnet.pos 
-                  - Vector.new(player.body:getPosition()))
-   local force = line * (1/line:len()) * (100 * magnet.power)
+   if player.alive then
+      magnet.rot = getAngle(Vector.new(player.body:getPosition()), magnet.pos)
 
+      local line = (magnet.pos 
+                    - Vector.new(player.body:getPosition()))
+      local force = line * (1/line:len()) * (100 * magnet.power)
+
+      if love.mouse.isDown("l") then
+         magnet.color = {0, 255, 0,255}
+         player.body:applyForce((force * -1):unpack())
+      elseif love.mouse.isDown("r") then
+         magnet.color = {255,0,0,255}
+         player.body:applyForce((force):unpack())
+      else
+         magnet.color = {255,255,255,255}
+      end
+   end
    for _,i in pairs({_powerups, _enemies, _bombs}) do
       for index,v in pairs(i) do
          if v.alive then
@@ -31,16 +44,6 @@ function game:update(dt)
             table.remove(i, index)  
          end
       end
-   end
-      
-   if love.mouse.isDown("l") then
-      magnet.color = {0, 255, 0,255}
-      player.body:applyForce((force * -1):unpack())
-   elseif love.mouse.isDown("r") then
-      magnet.color = {255,0,0,255}
-      player.body:applyForce((force):unpack())
-   else
-      magnet.color = {255,255,255,255}
    end
 
    frames = frames + 1
@@ -60,10 +63,12 @@ function game:draw()
    drawBG()
 
    love.graphics.setColor(255,255,255,255)
-   love.graphics.draw(player.image, 
-                      player.body:getX(), 
-                      player.body:getY(), 0, 1, 1, 
-                      player.image:getWidth()/2, player.image:getHeight()/2)
+   if player.alive then
+      love.graphics.draw(player.image, 
+                         player.body:getX(), 
+                         player.body:getY(), 0, 1, 1, 
+                         player.image:getWidth()/2, player.image:getHeight()/2)
+   end
 
    drawObjects()
    drawMagnetMouse()
@@ -133,12 +138,18 @@ function game:enter(previous)
    player.shape:setData{type="player"}
    player.pos = player.pos or Vector.new(width/2, height/2)
    player.life = 10
+   player.alive = true
    player.looselife = function() 
                          player.life = player.life - 1 
-                         if player.life <= 0 then
+                         if (player.life <= 0) and player.alive then
+                            player.alive = false
                             Gamestate.switch(gameover)
                          end
                       end
+  player.getlife = function() 
+                      player.life = math.min(player.life + 1, 10)
+                   end
+
 
    -- magnet pointer
    magnet = {}
@@ -147,7 +158,12 @@ function game:enter(previous)
    magnet.rot = 0
    magnet.color = {255,255,255,255}
    magnet.power = 1
-   magnet.powerup = function() magnet.power = math.min(magnet.power + 1, 10) end
+   magnet.powerup = function() 
+                       Timer.add(math.random(4,8), 
+                                 function() 
+                                    magnet.power = math.max(magnet.power - 1, 1) 
+                                 end)
+                       magnet.power = math.min(magnet.power + 1, 10) end
 
 
 end
@@ -299,6 +315,7 @@ end
 function on_collision (a, b, coll)
    local player_inst = false
    local other
+   local bomb = false
    if a.type == "player" then
       player_shape = a
       other = b
@@ -310,13 +327,16 @@ function on_collision (a, b, coll)
    if player_shape then
       if other then
          if other.type == "powerup" then
-            magnet.powerup()
+            if other.instance.health then
+               player.getlife()
+            else
+               magnet.powerup()
+            end
             other.instance:destroy()
          elseif other.type == "enemy" then
             player.looselife()
             other.instance:bounceOff(player_shape, coll)
          end
       end
-   end
-      --   print(a.type, b.type, coll)
+   end      
 end
