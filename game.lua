@@ -109,7 +109,7 @@ function game:enter(previous)
    end
 
    -- BG
-   bg_img = love.graphics.newImage("img/bg_tile.png")
+   bg_img = love.graphics.newImage("img/bg.png")
 
    -- player
    player = player or {}
@@ -195,17 +195,22 @@ function drawScore ()
 end
 
 
-function drawBG ()
-   local tile = 32
-   local num = {cols=width/tile, rows=height/tile}
-   love.graphics.setColor(100, 100, 100, 255)
-   for i=0, num.rows do
-      for j=0, num.cols do
-	 love.graphics.draw(bg_img, j * tile, i * tile, 0, 1, 1)
-      end
-   end
-end
+-- function drawBG ()
+--    local tile = 32
+--    local num = {cols=width/tile, rows=height/tile}
+--    love.graphics.setColor(100, 100, 100, 255)
+--    for i=0, num.rows do
+--       for j=0, num.cols do
+-- 	 love.graphics.draw(bg_img, j * tile, i * tile, 0, 1, 1)
+--       end
+--    end
+-- end
 
+
+function drawBG ()
+   love.graphics.setColor(255, 255, 255, 255)
+   love.graphics.draw(bg_img, 0, 0)
+end
 
 function drawMagnetMouse ()
    love.graphics.setColor(unpack(magnet.color))
