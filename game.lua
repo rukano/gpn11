@@ -67,7 +67,7 @@ function game:draw()
 
    drawObjects()
    drawMagnetMouse()
-   drawMagnetism()
+   drawHeader()
    drawScore()
 end
 
@@ -132,6 +132,8 @@ function game:enter(previous)
    player.shape:setRestitution(0.1)
    player.shape:setData{type="player"}
    player.pos = player.pos or Vector.new(width/2, height/2)
+   player.life = 10
+   player.looselife = function() player.life = math.max(player.life - 1, 1) end
 
    -- magnet pointer
    magnet = {}
@@ -140,6 +142,8 @@ function game:enter(previous)
    magnet.rot = 0
    magnet.color = {255,255,255,255}
    magnet.power = 1
+   magnet.powerup = function() magnet.power = math.min(magnet.power + 1, 10) end
+
 
 end
 
@@ -184,13 +188,21 @@ function getAngle (a,b)
  end
 
 
-function drawMagnetism ()
+function drawHeader ()
    love.graphics.setColor(100, 200, 255, 255)
    love.graphics.setLineWidth(1)
    love.graphics.print("Magnet Power: " .. tostring(magnet.power * 10) .. "%", 20, 3)
    love.graphics.rectangle("fill", 160, 3, magnet.power * 10, 13)
    love.graphics.setColor(255, 100, 255, 255)
    love.graphics.rectangle("line", 160, 3, 100, 13)
+
+   local offset = 300
+   love.graphics.setColor(255, 200, 55, 255)
+   love.graphics.setLineWidth(1)
+   love.graphics.print("Life: " .. tostring(player.life * 10) .. "%", 20 + offset, 3)
+   love.graphics.rectangle("fill", 160 + offset, 3, player.life * 10, 13)
+   love.graphics.setColor(255, 100, 255, 255)
+   love.graphics.rectangle("line", 160 + offset, 3, 100, 13)
 end
 
 
@@ -242,13 +254,26 @@ function drawObjects ()
 end
 
 function on_collision (a, b, coll)
-   if a.type == "bomb" and b.type == "enemy" then
-      a.instance:explode()
-      b.instance:destroy()
-   elseif b.type == "bomb" and a.type == "enemy" then
-      b.instance:explode()
-      a.instance:destroy()
-   else return end
-
---   print(a.type, b.type, coll)
+   local player_inst = false
+   local other
+   if a.type == "player" then
+      player_shape = a
+      other = b
+   end
+   if b.type == "player" then
+      player_shape = b
+      other = a
+   end
+   if player_shape then
+      if other then
+         if other.type == "powerup" then
+            magnet.powerup()
+            other.instance:destroy()
+         elseif other.type == "enemy" then
+            player.looselife()
+            other.instance:bounceOff(player_shape, coll)
+         end
+      end
+   end
+      --   print(a.type, b.type, coll)
 end

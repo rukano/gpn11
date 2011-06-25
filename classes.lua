@@ -31,6 +31,10 @@ end
 function Entity:update(dt)
 end
 
+function Entity:destroy()
+   self.alive = false
+end
+
 --------------------------------------------------------------------------------
 -- ENEMIES
 Enemy = Class{name="enemy", function(self, player_pos)
@@ -51,7 +55,7 @@ Enemy = Class{name="enemy", function(self, player_pos)
 				  self.shape:setDensity(0.5)
 				  self.shape:setRestitution(0.7)
 				  self.shape:setData({type="enemy", instance=self})
-                                  self.scale = r/self.img:getWidth()
+                                  self.scale = r/self.img:getWidth() * 2
                                   self.body:applyTorque(math.random(-100,100))
 				  table.insert(_enemies, self.id, self)
                                   --				  print("spawned enemy", #_enemies)
@@ -69,7 +73,10 @@ function Enemy:destroy()
    self.shape:setMask(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
 end
 
-
+function Enemy:bounceOff(ent, coll)
+   print(coll:getNormal())
+--   self.body:applyImpulse(coll:getNormal(), 0, 0)
+end
 
 --------------------------------------------------------------------------------
 -- POWERUPS
