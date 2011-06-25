@@ -8,9 +8,9 @@ function menu:enter(previous)
    menu_music = love.audio.play("music/menu.ogg", "stream", true)
 
    love.graphics.setBackgroundColor(0, 0, 0, 255)
-   love.graphics.setFont(48)
+   love.graphics.setFont(font, 40)
 
-   items = items or {"[F1] start","[F2] highscores","[F3] credits", "[F4] quit", " ", "[f12] fullscreen"}
+   items = items or {"[F1] start","[F2] highscores","[F3] credits", "[F4] quit", " ", "[F12] fullscreen"}
 
    star_img = star_img or love.graphics.newImage("LICK/lib/images/star.png")
    magnet_img = magnet_img or love.graphics.newImage("img/magnet.png")

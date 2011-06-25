@@ -93,6 +93,9 @@ function love.load()
    images.bomb = love.graphics.newImage("img/bomb.png")
    images.boom = love.graphics.newImage("img/boom.png")
 
+   font = love.graphics.newFont( "game_over.ttf" , 128)
+   love.graphics.setFont(font)
+
    love.graphics.setBackgroundColor(100, 100, 100)
    love.graphics.setBlendMode("alpha")
    love.graphics.setMode(width, height, false, true, 0)
