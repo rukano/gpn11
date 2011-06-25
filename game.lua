@@ -12,7 +12,7 @@ end
 function game:update(dt)
    world:update(dt)
 
-   print(_bomb_count, _enemy_count)
+--   print(_bomb_count, _enemy_count)
 
    magnet.pos.x, magnet.pos.y = love.mouse.getPosition()
    magnet.rot = getAngle(Vector.new(player.body:getPosition()), magnet.pos)
@@ -68,9 +68,9 @@ end
 
 
 function game:enter(previous)
-   print("starting the game, initialize stuff!")
-   
    frames = 0
+   love.graphics.setFont(10)
+   
 
    -- physics
    world = world or love.physics.newWorld(0, 0, width, height)
