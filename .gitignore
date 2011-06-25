@@ -1,0 +1,9 @@
+music
+*.mp3
+**/*.mp3
+*.aif
+**/*.aif
+*.aiff
+**/*.aiff
+*.wav
+**/*.wav
