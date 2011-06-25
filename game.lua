@@ -154,6 +154,8 @@ end
 
 function game:leave()
    love.audio.stop(game_music)
+   love.audio.stop(magnet_snd_repel)
+   love.audio.stop(magnet_snd_attract)
 
    print("----------------------------------")
    print("leaving the game... goto highscore")
