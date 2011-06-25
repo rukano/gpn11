@@ -87,6 +87,21 @@ function love.load()
    math.tau = math.pi * 2
    score = 0
 
+   scores_file = love.filesystem.newFile( "records.txt" )
+   scores_file:open('r')
+   scores_counter = 0
+   scores_table = {}
+   for line in scores_file:lines() do
+      scores_counter = scores_counter + 1
+      local t = {}
+      local score, name
+      score, name = string.match(line, "(%d+) (%w+)")
+      t.score = score
+      t.name = name
+      table.insert(scores_table, scores_counter, t)
+   end
+   scores_file:close()
+
    images = {}
    images.enemy = love.graphics.newImage("img/enemy.png")
    images.powerup = love.graphics.newImage("img/power_up.png")
