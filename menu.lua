@@ -60,7 +60,7 @@ function menu:keypressed(key)
    elseif key == "f3" then
       Gamestate.switch(credits)
    elseif key == "f4" then
-      love.quit()
+      love.event.push('q')
    end
 end
 
