@@ -15,10 +15,24 @@ function game:update(dt)
    magnet.pos.x, magnet.pos.y = love.mouse.getPosition()
    magnet.rot = getAngle(Vector.new(player.body:getPosition()), magnet.pos)
 
+   Timer.update(dt)
+
    local line = (magnet.pos 
                   - Vector.new(player.body:getPosition()))
    local force = line * (1/line:len()) * (100 * magnet.power)
 
+   for _,i in pairs({_powerups, _enemies, _bombs}) do
+      for index,v in pairs(i) do
+         if v.alive then
+            v:update(dt)
+         else
+            v.shape = nil
+            v.body = nil
+            table.remove(i, index)  
+         end
+      end
+   end
+      
    if love.mouse.isDown("l") then
       magnet.color = {0, 255, 0,255}
       player.body:applyForce((force * -1):unpack())

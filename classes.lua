@@ -12,18 +12,23 @@ max_enemies = 100
 
 
 Entity = Class(function(self) 
-                  
+                  self.alive = true
                end)
 
 
 function Entity:draw()
-   love.graphics.draw(self.img, 
-                      self.body:getX(),
-                      self.body:getY(),
-                      self.body:getAngle(),
-                      self.scale,
-                      self.scale
-                   )
+   if self.alive then
+      love.graphics.draw(self.img, 
+                         self.body:getX(),
+                         self.body:getY(),
+                         self.body:getAngle(),
+                         self.scale,
+                         self.scale
+                      )
+   end
+end
+
+function Entity:update(dt)
 end
 
 --------------------------------------------------------------------------------
@@ -38,6 +43,7 @@ Enemy = Class{name="enemy", function(self, player_pos)
 				  _enemy_count = _enemy_count + 1
 				  self.img = images.enemy
 				  self.id = _enemy_count
+
 				  self.color = {255, 100, 100, 255}
 				  self.body = love.physics.newBody(world, x, y, 5, 0.5)
 				  self.shape = love.physics.newCircleShape(self.body, 0, 0, r)
@@ -57,9 +63,10 @@ Enemy = Class{name="enemy", function(self, player_pos)
 Enemy:inherit(Entity)
 
 function Enemy:destroy()
-   _enemies[self.id].body:destroy()
-   _enemies[self.id].shape:destroy()
-   table.remove(_enemies, self.id)
+   self.alive = false
+   self.body:setX(math.random(-5000, -10))
+   self.body:setY(math.random(-5000, -10))
+   self.shape:setMask(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
 end
 
 
@@ -73,6 +80,7 @@ Powerup = Class{name="powerup", function(self, player_pos)
 				   local y = math.random(height-80) + 40
 				   local r = 10
 				   self.img = images.powerup
+
 				   self.color = {100, 100, 255, 255}
 				   self.body = love.physics.newBody(world, x, y, 20, 0.4)
 				   self.shape = love.physics.newCircleShape(self.body, 0, 0, r)
@@ -83,10 +91,15 @@ Powerup = Class{name="powerup", function(self, player_pos)
                                    self.body:applyTorque(math.random(-100,100))
                                    self.scale = r/self.img:getWidth()
 				   table.insert(_powerups, self)
+                                   Timer.add(20, function() 
+                                                    self.alive = false
+                                                 end)
                                    --				   print("spawned powerup", #_powerups)
 				end }
 
 Powerup:inherit(Entity)
+
+
 
 --------------------------------------------------------------------------------
 -- BOMBS
@@ -113,7 +126,5 @@ Bomb:inherit(Entity)
 
 function Bomb:explode()
    print("bomb exploded")
-   _bombs[self.id].body:destroy()
-   _bombs[self.id].shape:destroy()
-   table.remove(_bombs, self.id)
+   self.alive = false
 end
