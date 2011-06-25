@@ -35,7 +35,7 @@ end
 --------------------------------------------------------------------------------
 -- HIGH SCORES
 function highscores_screen:enter (prev)
-   love.graphics.setFont(48)
+   love.graphics.setFont(font)
    hs_music = love.audio.play("music/highscore.ogg", "stream", true)
 end
 
