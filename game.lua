@@ -15,10 +15,24 @@ function game:update(dt)
    magnet.pos.x, magnet.pos.y = love.mouse.getPosition()
    magnet.rot = getAngle(Vector.new(player.body:getPosition()), magnet.pos)
 
+   Timer.update(dt)
+
    local line = (magnet.pos 
                   - Vector.new(player.body:getPosition()))
    local force = line * (1/line:len()) * (100 * magnet.power)
 
+   for _,i in pairs({_powerups, _enemies, _bombs}) do
+      for index,v in pairs(i) do
+         if v.alive then
+            v:update(dt)
+         else
+            v.shape = nil
+            v.body = nil
+            table.remove(i, index)  
+         end
+      end
+   end
+      
    if love.mouse.isDown("l") then
       magnet.color = {0, 255, 0,255}
       player.body:applyForce((force * -1):unpack())
@@ -199,7 +213,7 @@ end
 
 
 function drawBG ()
-   love.graphics.setColor(255, 255, 255, 255)
+   love.graphics.setColor(0, 55, 55, 255)
    love.graphics.draw(bg_img, 0, 0)
 
    for k,v in pairs(limits.shapes) do
@@ -220,34 +234,11 @@ end
 
 function drawObjects ()
    -- POWERUPS
-   for k,v in pairs(_powerups) do
-      love.graphics.setColor(unpack(v.color))
-      love.graphics.circle("fill",
-			   v.body:getX(),
-			   v.body:getY(),
-			   v.shape:getRadius(),
-			   48)
+   for _,i in pairs({_powerups, _enemies, _bombs}) do
+      for k,v in pairs(i) do
+         v:draw()
+      end
    end
-   -- ENEMIES
-   for k,v in pairs(_enemies) do
-      love.graphics.setColor(unpack(v.color))
-      love.graphics.circle("fill",
-			   v.body:getX(),
-			   v.body:getY(),
-			   v.shape:getRadius(),
-			   48)
-   end
-   -- BOMBS
-   for k,v in pairs(_bombs) do
-      love.graphics.setColor(unpack(v.color))
-      love.graphics.circle("fill",
-			   v.body:getX(),
-			   v.body:getY(),
-			   v.shape:getRadius(),
-			   48)
-   end
-
-   
 end
 
 function on_collision (a, b, coll)
