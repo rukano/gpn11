@@ -1,0 +1,10 @@
+1000 jga
+0 foo
+0 foo
+0 foo
+0 foo
+0 foo
+0 foo
+0 foo
+0 foo
+0 foo
