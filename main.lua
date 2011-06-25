@@ -23,9 +23,9 @@ lick.reset = true
 lick.directory = "."
 
 function love.load()
-   highscore.set("records", 3, "dummy", 1000)
-   highscore.add("dummy", 10)
-   highscore.add("foo", 100)
+   highscore.set("records.lua", 3, "dummy", 1000)
+   highscore.add("rukano", 10000)
+
    highscore.save()
 
    
