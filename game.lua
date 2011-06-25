@@ -174,15 +174,22 @@ function game:leave()
 end
 
 function game:keypressed (key)
+   --[[
    if key == "up" then
       magnet.power = magnet.power + 1
    elseif key == "down" then 
       magnet.power = magnet.power - 1      
    end
+   --]]
 
    if key == " " then
       Bomb({player.body:getPosition()})
    end
+
+   if key == "escape" then
+      Gamestate.switch(menu)
+   end
+
 end
 
 function game:mousepressed(x, y, btn)
