@@ -12,12 +12,9 @@ end
 function game:update(dt)
    world:update(dt)
 
---   print(_bomb_count, _enemy_count)
-
    magnet.pos.x, magnet.pos.y = love.mouse.getPosition()
    magnet.rot = getAngle(Vector.new(player.body:getPosition()), magnet.pos)
 
-   -- TODO: make force exponential!
    local line = (magnet.pos 
                   - Vector.new(player.body:getPosition()))
    local force = line * (1/line:len()) * (100 * magnet.power)
@@ -48,17 +45,11 @@ end
 function game:draw()
    drawBG()
 
-   for k,v in pairs(limits.shapes) do
-      love.graphics.setColor(0, 0, 25, 255)
-      love.graphics.polygon("fill", v:getPoints())
-   end
-
    love.graphics.setColor(255,255,255,255)
    love.graphics.draw(player.image, 
                       player.body:getX(), 
                       player.body:getY(), 0, 1, 1, 
                       player.image:getWidth()/2, player.image:getHeight()/2)
-
 
    drawObjects()
    drawMagnetMouse()
@@ -210,6 +201,12 @@ end
 function drawBG ()
    love.graphics.setColor(255, 255, 255, 255)
    love.graphics.draw(bg_img, 0, 0)
+
+   for k,v in pairs(limits.shapes) do
+      love.graphics.setColor(0, 0, 25, 255)
+      love.graphics.polygon("fill", v:getPoints())
+   end
+
 end
 
 function drawMagnetMouse ()
