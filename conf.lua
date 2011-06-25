@@ -1,4 +1,5 @@
 function love.conf(t)
+   t.identity = "ichmagnet"
    t.modules.joystick = true
    t.modules.audio = true
    t.modules.keyboard = true
