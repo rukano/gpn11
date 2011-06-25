@@ -1,6 +1,10 @@
 #+STARTUP: indent
 #+STARTUP: content
 
+* TODO Implement quit
+* TODO Investigate strange posting on reloading!
+
+
 * GAMEPLAY
 ** Collision detection is ok, now make it work the way it sould
 ** Fix the crashing bug on counting tables
@@ -53,7 +57,7 @@
 ** Bosses
 - U should break their balls
 - Balls => polarity normal
-*** Schlagzeuger von Monster MAgnet
+*** Schlagzeuger von Monster Magnet
 *** Singer von Magneto
 *** Magneto from the X Men
 ** Levels = 3 ?
