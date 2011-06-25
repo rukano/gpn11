@@ -53,7 +53,12 @@ function highscores_screen:draw ()
    drawStars()
 
    love.graphics.setColor(100, 100, 255, 255)
-   love.graphics.print("you killed: " .. tostring(mainscore or 0) .. " enemies", 100, height * 0.3)
+   
+   for i,v in pairs(scores_table) do
+      love.graphics.print(v.name, 100, (50 * (i-1)) + 20)
+      love.graphics.print(". . . . . .", 200, (50 * (i-1)) + 20)
+      love.graphics.print(v.score, 350, (50 * (i-1)) + 20)
+   end
 end
 
 function highscores_screen:keypressed (key, code)

@@ -5,6 +5,7 @@ function menu:init ()
 end
 
 function menu:enter(previous)
+   score = 0
    menu_music = love.audio.play("music/menu.ogg", "stream", true)
 
    love.graphics.setBackgroundColor(0, 0, 0, 255)
