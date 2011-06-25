@@ -11,8 +11,8 @@ HC = require "HardonCollider"
 
 require "menu"
 require "game"
-require "game_over"
-require "highscore"
+require "credits"
+require "highscores"
 require "classes"
 
 -- lick.clearFlag = true
@@ -32,7 +32,8 @@ function love.load()
    love.graphics.setMode(width, height, false, true, 0)
    love.mouse.setVisible(false)
 
-   Gamestate.switch(game)
+--   Gamestate.switch(game)
+   Gamestate.switch(menu)
 end
 
 
