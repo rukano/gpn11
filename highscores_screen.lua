@@ -1,0 +1,1 @@
+highscores_screen = Gamestate.new()
