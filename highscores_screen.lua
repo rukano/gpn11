@@ -1,9 +1,8 @@
 highscores_screen = Gamestate.new()
-
-
-
 gameover = Gamestate.new()
 
+--------------------------------------------------------------------------------
+-- GAME OVER
 
 function gameover:update(dt)
    timeout = timeout - dt
@@ -13,8 +12,10 @@ function gameover:update(dt)
 end
 
 function gameover:enter()
+   love.audio.play("music/gameover.ogg", "stream")
    love.graphics.setBackgroundColor(0, 0, 0)
    timeout = 5
+   Timer.add(timeout, function() Gamestate.switch(highscores_screen) end)
 end
 
 function gameover:draw()
@@ -28,5 +29,35 @@ function gameover:draw()
                           0,
                           4,
                           4)
+   end
+end
+
+--------------------------------------------------------------------------------
+-- HIGH SCORES
+function highscores_screen:enter (prev)
+   love.graphics.setFont(48)
+   hs_music = love.audio.play("music/highscore.ogg", "stream", true)
+end
+
+function highscores_screen:leave ()
+   love.audio.stop(hs_music)
+end
+
+function highscores_screen:update (dt)
+   updateStars(dt)
+end
+
+function highscores_screen:draw ()
+   love.graphics.setBackgroundColor(0, 0, 0, 255)
+
+   drawStars()
+
+   love.graphics.setColor(100, 100, 255, 255)
+   love.graphics.print("you killed: " .. tostring(mainscore or 0) .. " enemies", 100, height * 0.3)
+end
+
+function highscores_screen:keypressed (key, code)
+   if key == "escape" then
+      Gamestate.switch(menu)
    end
 end
