@@ -147,5 +147,20 @@ end
 
 function love.quit ()
 --   highscore.save()
+--   saveHighscores()
    print("Thanks for playing, come back again!")
+end
+
+
+function saveHighscores ()
+   local afile = love.filesystem.newFile( "meh.txt")
+   local str = ""
+--   print(file)
+   afile:open("w")
+   for i,v in pairs(scores_table) do
+      str = str .. tostring(v.score) .. " " .. v.name .. "\n"
+   end
+   print("wrtie highscores")
+   afile:write("blabla")
+   afile:close()
 end
