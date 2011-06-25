@@ -125,7 +125,7 @@ Powerup:inherit(Entity)
 Bomb = Class{name="bomb", function(self, player_pos)
                              Entity.construct(self)
 			     local x, y = unpack(player_pos)
-			     local r = 30
+			     local r = 20
                                   self.radius = r
 			     _bomb_count = _bomb_count + 1
 			     self.img = images.bomb
@@ -138,6 +138,10 @@ Bomb = Class{name="bomb", function(self, player_pos)
 			     self.shape:setRestitution(0)
 			     self.shape:setData({type="bomb", instance=self})
                              self.body:applyTorque(math.random(-100,100))
+                             Timer.add(3, function() 
+                                             self:explode()
+                                          end)
+                             love.audio.play("sfx/boom.ogg", "stream")
                              self.scale = (r * 2)/self.img:getWidth()
 			     table.insert(_bombs, self.id, self)
                              --			     print("throwed a bomb")
@@ -146,5 +150,15 @@ Bomb:inherit(Entity)
 
 function Bomb:explode()
    print("bomb exploded")
-   self.alive = false
+
+   for _, enemy in pairs(_enemies) do
+      local dist = Vector.new(self.body:getPosition()):dist(
+         Vector.new(enemy.body:getPosition()))
+      if dist < 100 then
+         enemy:destroy()
+      end
+   end
+   self.img = images.boom
+   Timer.add(0.5, function() self.alive = false end)
 end
+
