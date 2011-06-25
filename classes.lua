@@ -50,7 +50,7 @@ Enemy = Class{name="enemy", function(self, player_pos)
 			       if #_enemies <= max_enemies then 
 				  local x = math.random(width-80) + 40
 				  local y = math.random(height-80) + 40
-				  local r = 20
+				  local r = math.random(10,20)
                                   self.radius = r
 				  _enemy_count = _enemy_count + 1
 				  self.img = images.enemy
@@ -58,17 +58,17 @@ Enemy = Class{name="enemy", function(self, player_pos)
 
 				  --self.color = {255, 100, 100, 255}
 				  self.body = love.physics.newBody(
-                                     world, x, y, 5, 0.5)
+                                     world, x, y, 5, 0.001)
 				  self.shape = love.physics.newCircleShape(
                                      self.body, 0, 0, r)
-				  self.shape:setFriction(0)
+				  self.shape:setFriction(0.5)
 				  self.shape:setDensity(0.5)
 				  self.shape:setRestitution(0.7)
 				  self.shape:setData({type="enemy", instance=self})
                                   self.scale = (r * 2)/self.img:getWidth()
-                                  self.body:applyTorque(math.random(-100,100))
+                                  self.body:applyTorque(math.random(-0.5,0.5))
 				  table.insert(_enemies, self.id, self)
-                                  --				  print("spawned enemy", #_enemies)
+                                  -- print("spawned enemy", #_enemies)
 			       else
 				  print("max enemies reached!")
 			       end
