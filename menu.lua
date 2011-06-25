@@ -53,11 +53,11 @@ end
 function menu:keypressed(key)
    if key == "f1" then
       Gamestate.switch(game)
-   if key == "f2" then
-      Gamestate.switch(highscores)
-   if key == "f3" then
+   elseif key == "f2" then
+      Gamestate.switch(highscores_screen)
+   elseif key == "f3" then
       Gamestate.switch(credits)
-   if key == "f4" then
+   elseif key == "f4" then
       love.quit()
    end
 end
@@ -136,10 +136,10 @@ function wrap (num, min, max)
       max = min
       min = 0
    end
-
+   
    local range = max-min
    local norm = num-min
-
+   
    if even(num / range) then
       return (num % (range*2)) + min
    else

@@ -1,3 +1,4 @@
+-- LIBS
 require "LICK"
 require "LICK/lib"
 AnAL = require "AnAL/AnAL"
@@ -8,11 +9,13 @@ Vector = require "LICK.lib.hump.vector"
 Class = require "LICK.lib.hump.class"
 Camera = require "LICK.lib.hump.camera"
 HC = require "HardonCollider"
+require "sick"
 
+-- FILES
 require "menu"
 require "game"
 require "credits"
-require "highscores"
+require "highscores_screen"
 require "classes"
 
 -- lick.clearFlag = true
@@ -20,6 +23,13 @@ lick.reset = true
 lick.directory = "."
 
 function love.load()
+   highscore.set("records", 3, "dummy", 1000)
+   highscore.add("dummy", 10)
+   highscore.add("foo", 100)
+   highscore.save()
+
+   
+
    width = love.graphics.getWidth()
    height = love.graphics.getHeight()
    screen_center = Vector.new(width/2, height/2)
@@ -51,4 +61,10 @@ function love.keypressed(key, code)
    if key == "f12" then
       love.graphics.toggleFullscreen()
    end
+end
+
+
+function love.quit ()
+   highscore.save()
+   print("Thanks for playing, come back again!")
 end
