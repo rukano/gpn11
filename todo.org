@@ -15,6 +15,7 @@
 ** make bombs
 ** make power ups
 ** retouch the stuff
+** particle systems for the propulsion
 
 * Music
 ** Menu track
