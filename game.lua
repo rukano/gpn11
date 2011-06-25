@@ -133,7 +133,12 @@ function game:enter(previous)
    player.shape:setData{type="player"}
    player.pos = player.pos or Vector.new(width/2, height/2)
    player.life = 10
-   player.looselife = function() player.life = math.max(player.life - 1, 1) end
+   player.looselife = function() 
+                         player.life = player.life - 1 
+                         if player.life <= 0 then
+                            Gamestate.switch(gameover)
+                         end
+                      end
 
    -- magnet pointer
    magnet = {}
