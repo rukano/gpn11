@@ -13,7 +13,7 @@ function menu:enter(previous)
 
    items = items or {"[F1] start","[F2] highscores","[F3] credits", "[F4] quit", " ", "[F12] fullscreen"}
 
-   star_img = star_img or love.graphics.newImage("LICK/lib/images/star.png")
+   star_img = star_img or love.graphics.newImage("img/star.png")
    magnet_img = magnet_img or love.graphics.newImage("img/magnet.png")
    player_img = player_img or love.graphics.newImage("img/player.png")
    player_y = 100

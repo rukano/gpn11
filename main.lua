@@ -1,15 +1,9 @@
 -- LIBS
-require "LICK"
-require "LICK/lib"
-AnAL = require "AnAL/AnAL"
-ez = require "LICK.lib.hlpr"
-Timer = require "LICK.lib.hump.timer"
-Gamestate = require "LICK.lib.hump.gamestate"
-Vector = require "LICK.lib.hump.vector"
-Class = require "LICK.lib.hump.class"
-Camera = require "LICK.lib.hump.camera"
-HC = require "HardonCollider"
--- require "sick"
+Timer = require "hump.timer"
+Gamestate = require "hump.gamestate"
+Vector = require "hump.vector"
+Class = require "hump.class"
+ez = require "hlpr"
 
 -- FILES
 require "menu"
@@ -17,10 +11,6 @@ require "game"
 require "credits"
 require "highscores_screen"
 require "classes"
-
--- lick.clearFlag = true
-lick.reset = true
-lick.directory = "."
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -83,7 +73,7 @@ function love.load()
    width = love.graphics.getWidth()
    height = love.graphics.getHeight()
    screen_center = Vector.new(width/2, height/2)
-   
+
    math.tau = math.pi * 2
    score = 0
 
@@ -164,3 +154,4 @@ function saveHighscores ()
    afile:write("blabla")
    afile:close()
 end
+
